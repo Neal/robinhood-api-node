@@ -1,0 +1,7 @@
+{
+    "extends": "google",
+    "rules": {
+        "comma-dangle": [2, "only-multiline"],
+        "max-len": [2, 100, 2]
+    }
+}
