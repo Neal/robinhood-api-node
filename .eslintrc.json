@@ -2,6 +2,7 @@
     "extends": "google",
     "rules": {
         "comma-dangle": [2, "only-multiline"],
-        "max-len": [2, 100, 2]
+        "max-len": [2, 100, 2],
+        "no-var": 2 // require let or const instead of var (off by default)
     }
 }
