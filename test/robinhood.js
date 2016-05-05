@@ -5,60 +5,33 @@ const nock = require('nock');
 const should = require('should');
 const assert = chai.assert;
 
+const shared = require('./shared');
+
 const Robinhood = require('..');
-
-const fakeData = {
-  username: 'someUsername',
-  password: 'somePassword',
-  authToken: 'someAuthToken',
-  accountNumber: 'someAccountNumber',
-  apiRoot: 'https://api.robinhood.com'
-};
-
-const fakeDataWithUsernamePassword = {
-  username: 'someUsername',
-  password: 'somePassword'
-};
-
-const fakeDataWithAuthToken = {
-  authToken: 'someAuthToken'
-};
 
 describe('Robinhood', () => {
 
   let rh;
 
+  shared.commonInit();
+
   beforeEach(done => {
-    nock.cleanAll();
-
-    nock('https://api.robinhood.com')
-      .post('/api-token-auth/', {
-        username: 'someUsername',
-        password: 'somePassword'
-      })
-      .reply(200, {
-        token: 'someAuthToken'
-      });
-
-    nock('https://api.robinhood.com', {reqheaders: {Authorization: 'Token someAuthToken'}})
-      .persist()
-      .get('/accounts/')
-      .reply(200, {
-        results: [{account_number: 'someAccountNumber'}] // eslint-disable-line camelcase
-      });
-
-    rh = new Robinhood(fakeDataWithAuthToken, err => {
+    rh = new Robinhood({authToken: shared.testAuthToken}, err => {
       should.not.exist(err);
       should.exist(rh._accountNumber);
       done();
     });
   });
 
-  afterEach(done => {
-    done();
-  });
-
   it('should set username, password, authToken, accountNumber and apiRoot', done => {
+    const fakeData = {
+      username: 'someUsername',
+      password: 'somePassword',
+      authToken: 'someAuthToken',
+      accountNumber: 'someAccountNumber',
+      apiRoot: 'https://api.robinhood.com'
+    };
+
     let rh = new Robinhood(fakeData, err => {
       should.not.exist(err);
       rh._username.should.equal(fakeData.username);
@@ -70,25 +43,6 @@ describe('Robinhood', () => {
     });
   });
 
-  it('should handle callback', done => {
-    rh.accounts.getAll((err, data) => {
-      should.not.exist(err);
-      should.exist(data);
-      done();
-    });
-  });
-
-  it('should handle promise', done => {
-    rh.accounts.getAll()
-      .then(data => {
-        should.exist(data);
-      })
-      .catch(err => {
-        should.not.exist(err);
-      })
-      .then(done);
-  });
-
   it('should get accountNumber', done => {
     rh._getAccountNumber()
       .then(data => {
@@ -98,6 +52,73 @@ describe('Robinhood', () => {
         should.not.exist(err);
       })
       .then(done);
+  });
+
+  it('should handle empty opts', () => {
+    new Robinhood(null, err => {
+      should.exist(err);
+    });
+  });
+
+  it('should handle success callback', done => {
+    rh.accounts.getAll((err, data) => {
+      should.not.exist(err);
+      should.exist(data);
+      done();
+    });
+  });
+
+  it('should handle failure callback', done => {
+    delete rh._authToken;
+    rh.accounts.getAll((err, data) => {
+      should.exist(err);
+      done();
+    });
+  });
+
+  it('should handle resolved promise', () => {
+    return rh.accounts.getAll().should.be.fulfilled();
+  });
+
+  it('should handle rejected promise', () => {
+    delete rh._authToken;
+    return rh.accounts.getAll().should.be.rejected();
+  });
+
+  describe('init', () => {
+
+    beforeEach(done => {
+      nock.cleanAll();
+      nock.disableNetConnect();
+
+      delete rh._accountNumber;
+
+      done();
+    });
+
+    it('should handle network error when getting account', () => {
+      return rh._init().should.be.rejected();
+    });
+
+    it('should handle network error when logging in', () => {
+      delete rh._authToken;
+
+      return rh._init().should.be.rejected();
+    });
+
+  });
+
+  describe('makeRequest', () => {
+
+    it('should handle network error', () => {
+      nock.cleanAll();
+      nock.disableNetConnect();
+
+      delete rh._accountNumber;
+
+      return rh._getAccountNumber().should.be.rejected();
+    });
+
   });
 
   describe('buildReqOpts', () => {
