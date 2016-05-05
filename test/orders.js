@@ -1,6 +1,5 @@
 'use strict';
 
-const chai = require('chai');
 const nock = require('nock');
 const should = require('should');
 
@@ -14,8 +13,8 @@ describe('Orders', () => {
 
   shared.commonInit();
 
-  beforeEach(done => {
-    rh = new Robinhood({authToken: shared.testAuthToken}, err => {
+  before(done => {
+    rh = new Robinhood(null, err => {
       should.not.exist(err);
       should.exist(rh._accountNumber);
       done();
@@ -23,7 +22,7 @@ describe('Orders', () => {
   });
 
   it('should get all orders', () => {
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/orders/')
       .reply(200);
 
@@ -33,7 +32,7 @@ describe('Orders', () => {
   it('should get orders for instrument', () => {
     const instrument = '3ff8e73d-053e-4082-8489-178b77bfcc46';
 
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/orders/')
       .query({instrument: instrument})
       .reply(200);
@@ -71,7 +70,7 @@ describe('Orders', () => {
     });
 
     it('should place an order', () => {
-      nock(rh._apiRoot, shared.reqHeaders)
+      nock(rh._apiRoot)
         .post('/orders/', form)
         .reply(200);
 
@@ -81,7 +80,7 @@ describe('Orders', () => {
     it('should place a buy order', () => {
       form.side = 'buy';
 
-      nock(rh._apiRoot, shared.reqHeaders)
+      nock(rh._apiRoot)
         .post('/orders/', form)
         .reply(200);
 
@@ -91,7 +90,7 @@ describe('Orders', () => {
     it('should place a sell order', () => {
       form.side = 'sell';
 
-      nock(rh._apiRoot, shared.reqHeaders)
+      nock(rh._apiRoot)
         .post('/orders/', form)
         .reply(200);
 

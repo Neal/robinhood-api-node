@@ -1,6 +1,5 @@
 'use strict';
 
-const chai = require('chai');
 const nock = require('nock');
 const should = require('should');
 
@@ -14,8 +13,8 @@ describe('Documents', () => {
 
   shared.commonInit();
 
-  beforeEach(done => {
-    rh = new Robinhood({authToken: shared.testAuthToken}, err => {
+  before(done => {
+    rh = new Robinhood(null, err => {
       should.not.exist(err);
       should.exist(rh._accountNumber);
       done();
@@ -23,7 +22,7 @@ describe('Documents', () => {
   });
 
   it('should get requests', () => {
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/upload/document_requests/')
       .reply(200);
 
@@ -31,7 +30,7 @@ describe('Documents', () => {
   });
 
   it('should get all documents', () => {
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/documents/')
       .reply(200);
 
@@ -41,7 +40,7 @@ describe('Documents', () => {
   it('should get info', () => {
     const id = '3bb01433-4e4d-4905-b2de-e77ad596b63b';
 
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/documents/' + id + '/')
       .reply(200);
 
@@ -51,7 +50,7 @@ describe('Documents', () => {
   it('should get url', () => {
     const id = '3bb01433-4e4d-4905-b2de-e77ad596b63b';
 
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/documents/' + id + '/download/')
       .reply(200);
 

@@ -1,6 +1,5 @@
 'use strict';
 
-const chai = require('chai');
 const nock = require('nock');
 const should = require('should');
 
@@ -14,8 +13,8 @@ describe('Ach', () => {
 
   shared.commonInit();
 
-  beforeEach(done => {
-    rh = new Robinhood({authToken: shared.testAuthToken}, err => {
+  before(done => {
+    rh = new Robinhood(null, err => {
       should.not.exist(err);
       should.exist(rh._accountNumber);
       done();
@@ -23,7 +22,7 @@ describe('Ach', () => {
   });
 
   it('should get relationships', () => {
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/ach/relationships/')
       .reply(200);
 
@@ -33,7 +32,7 @@ describe('Ach', () => {
   it('should get relationship', () => {
     const id = 'd27445fb-bf6d-403a-be53-6d9101010083';
 
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/ach/relationships/' + id + '/')
       .reply(200);
 
@@ -41,7 +40,7 @@ describe('Ach', () => {
   });
 
   it('should get transfers', () => {
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/ach/transfers/')
       .reply(200);
 
@@ -51,7 +50,7 @@ describe('Ach', () => {
   it('should get transfer', () => {
     const id = 'd27445fb-bf6d-403a-be53-6d9101010083';
 
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/ach/transfers/' + id + '/')
       .reply(200);
 
@@ -59,7 +58,7 @@ describe('Ach', () => {
   });
 
   it('should get deposit schedules', () => {
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/ach/deposit_schedules/')
       .reply(200);
 
@@ -69,7 +68,7 @@ describe('Ach', () => {
   it('should get deposit schedule', () => {
     const id = 'd27445fb-bf6d-403a-be53-6d9101010083';
 
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/ach/deposit_schedules/' + id + '/')
       .reply(200);
 
@@ -77,7 +76,7 @@ describe('Ach', () => {
   });
 
   it('should get queued deposit', () => {
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/ach/iav/queued_deposit/')
       .reply(200);
 
@@ -89,7 +88,7 @@ describe('Ach', () => {
     const amountOne = '0.12';
     const amountTwo = '0.34';
 
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .post('/ach/relationships/' + id + '/micro_deposits/veryify/', {
         first_amount_cents: amountOne,
         second_amount_cents: amountTwo
@@ -102,7 +101,7 @@ describe('Ach', () => {
   it('should get bank', () => {
     const routingNumber = '12345';
 
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/ach/banks/' + routingNumber + '/')
       .reply(200);
 

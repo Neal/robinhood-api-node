@@ -1,6 +1,5 @@
 'use strict';
 
-const chai = require('chai');
 const nock = require('nock');
 const should = require('should');
 
@@ -14,8 +13,8 @@ describe('Quotes', () => {
 
   shared.commonInit();
 
-  beforeEach(done => {
-    rh = new Robinhood({authToken: shared.testAuthToken}, err => {
+  before(done => {
+    rh = new Robinhood(null, err => {
       should.not.exist(err);
       should.exist(rh._accountNumber);
       done();
@@ -25,7 +24,7 @@ describe('Quotes', () => {
   it('should get quotes', () => {
     const symbol = 'AAPL';
 
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/quotes/' + symbol + '/')
       .reply(200);
 

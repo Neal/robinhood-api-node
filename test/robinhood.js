@@ -1,9 +1,7 @@
 'use strict';
 
-const chai = require('chai');
 const nock = require('nock');
 const should = require('should');
-const assert = chai.assert;
 
 const shared = require('./shared');
 
@@ -16,7 +14,7 @@ describe('Robinhood', () => {
   shared.commonInit();
 
   beforeEach(done => {
-    rh = new Robinhood({authToken: shared.testAuthToken}, err => {
+    rh = new Robinhood(null, err => {
       should.not.exist(err);
       should.exist(rh._accountNumber);
       done();
@@ -43,21 +41,26 @@ describe('Robinhood', () => {
     });
   });
 
-  it('should get accountNumber', done => {
-    rh._getAccountNumber()
-      .then(data => {
-        should.exist(rh._accountNumber);
-      })
-      .catch(err => {
-        should.not.exist(err);
-      })
-      .then(done);
+  it('should get accountNumber', () => {
+    delete rh._accountNumber;
+    return rh._getAccountNumber().then(() => {
+      should.exist(rh._accountNumber);
+    });
+  });
+
+  it('should use default api root', done => {
+    const apiRoot = process.env.ROBINHOOD_API_ROOT;
+    delete process.env.ROBINHOOD_API_ROOT;
+    new Robinhood(null, err => {
+      should.not.exist(err);
+      should.exist(rh._apiRoot);
+      process.env.ROBINHOOD_API_ROOT = apiRoot;
+      done();
+    });
   });
 
   it('should handle empty opts', () => {
-    new Robinhood(null, err => {
-      should.exist(err);
-    });
+    new Robinhood();
   });
 
   it('should handle success callback', done => {
@@ -70,7 +73,7 @@ describe('Robinhood', () => {
 
   it('should handle failure callback', done => {
     delete rh._authToken;
-    rh.accounts.getAll((err, data) => {
+    rh.accounts.getAll(err => {
       should.exist(err);
       done();
     });
@@ -87,13 +90,10 @@ describe('Robinhood', () => {
 
   describe('init', () => {
 
-    beforeEach(done => {
+    beforeEach(() => {
       nock.cleanAll();
       nock.disableNetConnect();
-
       delete rh._accountNumber;
-
-      done();
     });
 
     it('should handle network error when getting account', () => {
@@ -110,12 +110,13 @@ describe('Robinhood', () => {
 
   describe('makeRequest', () => {
 
-    it('should handle network error', () => {
+    beforeEach(() => {
       nock.cleanAll();
       nock.disableNetConnect();
-
       delete rh._accountNumber;
+    });
 
+    it('should handle network error', () => {
       return rh._getAccountNumber().should.be.rejected();
     });
 
@@ -178,7 +179,7 @@ describe('Robinhood', () => {
         method: 'GET',
         endpoint: '/test/',
         headers: {
-          'accept': 'application/json'
+          accept: 'application/json'
         }
       };
 
@@ -195,7 +196,7 @@ describe('Robinhood', () => {
         method: 'GET',
         endpoint: '/test/',
         qs: {
-          'symbol': 'AAPL'
+          symbol: 'AAPL'
         }
       };
 
@@ -243,7 +244,7 @@ describe('Robinhood', () => {
 
       delete rh._authToken;
 
-      rh._buildReqOpts(opts, (err, reqOpts) => {
+      rh._buildReqOpts(opts, err => {
         should.exist(err);
         done();
       });
@@ -254,7 +255,7 @@ describe('Robinhood', () => {
         method: 'POST',
         endpoint: '/test/',
         form: {
-          'symbol': 'AAPL'
+          symbol: 'AAPL'
         }
       };
 
@@ -271,7 +272,7 @@ describe('Robinhood', () => {
         method: 'GET',
         endpoint: '/test/',
         form: {
-          'symbol': 'AAPL'
+          symbol: 'AAPL'
         }
       };
 

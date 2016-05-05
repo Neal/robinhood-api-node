@@ -1,6 +1,5 @@
 'use strict';
 
-const chai = require('chai');
 const nock = require('nock');
 const should = require('should');
 
@@ -14,8 +13,8 @@ describe('Margin', () => {
 
   shared.commonInit();
 
-  beforeEach(done => {
-    rh = new Robinhood({authToken: shared.testAuthToken}, err => {
+  before(done => {
+    rh = new Robinhood(null, err => {
       should.not.exist(err);
       should.exist(rh._accountNumber);
       done();
@@ -23,7 +22,7 @@ describe('Margin', () => {
   });
 
   it('should get upgrades', () => {
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/margin/upgrades/')
       .reply(200);
 
@@ -31,7 +30,7 @@ describe('Margin', () => {
   });
 
   it('should post upgrades', () => {
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .post('/margin/upgrades/')
       .reply(200);
 
@@ -39,7 +38,7 @@ describe('Margin', () => {
   });
 
   it('should get settings', () => {
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .get('/settings/margin/' + rh._accountNumber + '/')
       .reply(200);
 

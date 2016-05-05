@@ -1,9 +1,7 @@
 'use strict';
 
-const chai = require('chai');
 const nock = require('nock');
 const should = require('should');
-const assert = chai.assert;
 
 const shared = require('./shared');
 
@@ -16,7 +14,7 @@ describe('Auth', () => {
   shared.commonInit();
 
   beforeEach(done => {
-    rh = new Robinhood({authToken: shared.testAuthToken}, err => {
+    rh = new Robinhood(null, err => {
       should.not.exist(err);
       should.exist(rh._accountNumber);
       done();
@@ -27,12 +25,11 @@ describe('Auth', () => {
 
     const notString = 1234;
 
-    beforeEach(done => {
+    beforeEach(() => {
       delete rh._authToken;
-      done();
-    })
+    });
 
-    it('should get authToken from username and password', done => {
+    it('should get authToken from username and password', () => {
       nock('https://api.robinhood.com')
         .post('/api-token-auth/', {
           username: shared.testUsername,
@@ -44,14 +41,9 @@ describe('Auth', () => {
 
       should.not.exist(rh._authToken);
 
-      rh.auth.login(shared.testUsername, shared.testPassword)
-        .then(data => {
-          should.exist(rh._authToken);
-        })
-        .catch(err => {
-          should.not.exist(err);
-        })
-        .then(done);
+      return rh.auth.login(shared.testUsername, shared.testPassword).then(() => {
+        should.exist(rh._authToken);
+      });
     });
 
     it('should throw if username is not a string', () => {
@@ -79,23 +71,18 @@ describe('Auth', () => {
 
   describe('logout', () => {
 
-    it('should clear authToken on logout', done => {
-      nock(rh._apiRoot, shared.reqHeaders)
+    it('should clear authToken on logout', () => {
+      nock(rh._apiRoot)
         .post('/api-token-logout/')
         .reply(200);
 
-      rh.auth.logout()
-        .then(data => {
-          should.not.exist(rh._authToken);
-        })
-        .catch(err => {
-          should.not.exist(err);
-        })
-        .then(done);
+      return rh.auth.logout().then(() => {
+        should.not.exist(rh._authToken);
+      });
     });
 
     it('should handle promise reject', () => {
-      nock(rh._apiRoot, shared.reqHeaders)
+      nock(rh._apiRoot)
         .post('/api-token-logout/')
         .reply(500);
 

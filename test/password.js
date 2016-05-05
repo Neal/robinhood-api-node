@@ -1,6 +1,5 @@
 'use strict';
 
-const chai = require('chai');
 const nock = require('nock');
 const should = require('should');
 
@@ -14,8 +13,8 @@ describe('Password', () => {
 
   shared.commonInit();
 
-  beforeEach(done => {
-    rh = new Robinhood({authToken: shared.testAuthToken, username: shared.testUsername}, err => {
+  before(done => {
+    rh = new Robinhood(null, err => {
       should.not.exist(err);
       should.exist(rh._accountNumber);
       done();
@@ -25,7 +24,7 @@ describe('Password', () => {
   it('should post password reset request', () => {
     const email = 'name@example.com';
 
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .post('/password_reset/request/', {email: email})
       .reply(200);
 
@@ -35,7 +34,7 @@ describe('Password', () => {
   it('should post password reset', () => {
     const token = '123456';
 
-    nock(rh._apiRoot, shared.reqHeaders)
+    nock(rh._apiRoot)
       .post('/password_reset/', {
         username: shared.testUsername,
         password: shared.testPassword,
