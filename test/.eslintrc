@@ -1,0 +1,11 @@
+{
+  "env": {
+    "mocha": true
+  },
+  "rules": {
+    "camelcase": 0,
+    "max-len": 0,
+    "no-new": 0,
+    "padded-blocks": 0
+  }
+}
