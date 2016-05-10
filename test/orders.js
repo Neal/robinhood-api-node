@@ -29,6 +29,16 @@ describe('Orders', () => {
     return rh.orders.getAll().should.be.fulfilled();
   });
 
+  it('should get order', () => {
+    const id = 'cf9c2af3-26f3-4c2b-b295-202c2c8d15d9';
+
+    nock(rh._apiRoot)
+      .get('/orders/' + id + '/')
+      .reply(200);
+
+    return rh.orders.get(id).should.be.fulfilled();
+  });
+
   it('should get orders for instrument', () => {
     const instrument = '3ff8e73d-053e-4082-8489-178b77bfcc46';
 
@@ -37,7 +47,7 @@ describe('Orders', () => {
       .query({instrument: instrument})
       .reply(200);
 
-    return rh.orders.get(instrument).should.be.fulfilled();
+    return rh.orders.forInstrument(instrument).should.be.fulfilled();
   });
 
   describe('place', () => {
@@ -56,7 +66,7 @@ describe('Orders', () => {
         side: 'buy'
       };
       form = {
-        account: rh._accountNumber,
+        account: 'https://api.robinhood.com/accounts/' + rh._accountNumber + '/',
         instrument: opts.instrument.url,
         symbol: opts.instrument.symbol.toUpperCase(),
         type: opts.type || 'market',

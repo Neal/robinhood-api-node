@@ -100,6 +100,31 @@ describe('Accounts', () => {
     });
   });
 
+  it('should get dividend', () => {
+    let result = {
+      account: 'https://api.robinhood.com/accounts/' + shared.testAccountNumber + '/',
+      amount: '1.00',
+      id: '9da749d2-0226-48a7-aba7-c289f831638d',
+      instrument: 'https://api.robinhood.com/instruments/450dfc6d-5510-4d40-abfb-f633b7d9be3e/',
+      paid_at: '2016-01-04T23:12:53.112483Z',
+      payable_date: '2016-01-04',
+      position: '2.0000',
+      rate: '0.5200000000',
+      record_date: '2016-01-01',
+      url: 'https://api.robinhood.com/dividends/9da749d2-0226-48a7-aba7-c289f831638d/',
+      withholding: '0.00'
+    };
+
+    nock(rh._apiRoot)
+      .get('/dividends/' + result.id + '/')
+      .reply(200, result);
+
+    return rh.accounts.dividend(result.id).then(data => {
+      should.exist(data.body);
+      data.body.id.should.equal(result.id);
+    });
+  });
+
   it('should get portfolios', () => {
     let result = {
       account: 'https://api.robinhood.com/accounts/' + shared.testAccountNumber + '/',
