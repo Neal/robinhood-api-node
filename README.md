@@ -1,6 +1,8 @@
 # Robinhood API
 
 [![Build Status](https://travis-ci.com/Neal/robinhood-api-node.svg?token=zLjxUMzxyqcdWes6aZdW&branch=master)](https://travis-ci.com/Neal/robinhood-api-node)
+[![Dependency Status](https://david-dm.org/Neal/robinhood-api-node.svg)](https://david-dm.org/Neal/robinhood-api-node)
+[![devDependency Status](https://david-dm.org/Neal/robinhood-api-node/dev-status.svg)](https://david-dm.org/Neal/robinhood-api-node#info=devDependencies)
 
 A Node.js wrapper for the [Robinhood API](https://api.robinhood.com/).
 
