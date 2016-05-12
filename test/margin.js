@@ -31,7 +31,7 @@ describe('Margin', () => {
 
   it('should post upgrades', () => {
     nock(rh._apiRoot)
-      .post('/margin/upgrades/')
+      .post('/margin/upgrades/', {account: rh._accountNumber})
       .reply(200);
 
     return rh.margin.postUpgrades().should.be.fulfilled();
