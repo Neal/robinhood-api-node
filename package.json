@@ -8,7 +8,8 @@
   "scripts": {
     "lint": "./node_modules/.bin/eslint .",
     "test": "./node_modules/.bin/mocha",
-    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha"
+    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha",
+    "coveralls": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls && rm -rf ./coverage"
   },
   "dependencies": {
     "bluebird": "^3.3.5",
@@ -16,10 +17,12 @@
     "request": "^2.71.0"
   },
   "devDependencies": {
+    "coveralls": "^2.11.14",
     "eslint": "^3.8.0",
     "eslint-config-google": "^0.6.0",
     "istanbul": "^0.4.3",
     "mocha": "^3.1.2",
+    "mocha-lcov-reporter": "^1.2.0",
     "nock": "^8.0.0",
     "should": "^11.1.1"
   }
