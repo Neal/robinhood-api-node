@@ -1,6 +1,6 @@
 # Robinhood API
 
-[![Build Status](https://travis-ci.com/Neal/robinhood-api-node.svg?token=zLjxUMzxyqcdWes6aZdW&branch=master)](https://travis-ci.com/Neal/robinhood-api-node)
+[![Build Status](https://travis-ci.org/Neal/robinhood-api-node.svg?branch=master)](https://travis-ci.org/Neal/robinhood-api-node)
 [![Dependency Status](https://david-dm.org/Neal/robinhood-api-node.svg)](https://david-dm.org/Neal/robinhood-api-node)
 [![devDependency Status](https://david-dm.org/Neal/robinhood-api-node/dev-status.svg)](https://david-dm.org/Neal/robinhood-api-node#info=devDependencies)
 [![Coverage Status](https://coveralls.io/repos/github/Neal/robinhood-api-node/badge.svg)](https://coveralls.io/github/Neal/robinhood-api-node)
