@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.com/Neal/robinhood-api-node.svg?token=zLjxUMzxyqcdWes6aZdW&branch=master)](https://travis-ci.com/Neal/robinhood-api-node)
 [![Dependency Status](https://david-dm.org/Neal/robinhood-api-node.svg)](https://david-dm.org/Neal/robinhood-api-node)
 [![devDependency Status](https://david-dm.org/Neal/robinhood-api-node/dev-status.svg)](https://david-dm.org/Neal/robinhood-api-node#info=devDependencies)
+[![Coverage Status](https://coveralls.io/repos/github/Neal/robinhood-api-node/badge.svg)](https://coveralls.io/github/Neal/robinhood-api-node)
+[![license](https://img.shields.io/github/license/Neal/robinhood-api-node.svg)]()
 
 A Node.js wrapper for the [Robinhood API](https://api.robinhood.com/).
 
